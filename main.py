@@ -8,8 +8,8 @@ except:
     import pygame
 
 
-from player import Player
-from utils import Button
+from packages.player import Player
+from packages.utils import Button
 
 
 # multiplayer = input("Multiplayer? (y/n) ")
@@ -37,15 +37,12 @@ start_img = pygame.image.load("assets/images/buttons/start.png")
 exit_img = pygame.image.load("assets/images/buttons/exit.png")
 
 
-# start_button = Button(DISPLAY_W/2-100-75,DISPLAY_H/2-(126/4), start_img, 0.5)
-# exit_button = Button(DISPLAY_W/2+25,DISPLAY_H/2-(126/4), exit_img, 0.5)
 exit_button = Button(DISPLAY_W/2-(240/2)+(279/2)+10,
                      DISPLAY_H/2-(126/4), exit_img, 0.5)
 start_button = Button(DISPLAY_W/2-(279/2)-25,
                       DISPLAY_H/2-(126/4), start_img, 0.5)
 # ################################# GAME LOOP ##########################
-showMainMenu = True
-
+showMainMenu = False
 
 def mainGame():
     global showMainMenu
