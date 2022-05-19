@@ -10,7 +10,7 @@ except:
 
 from packages.player import Player
 from packages.utils import Button
-
+import packages.wsHandler as wsHandler
 
 # multiplayer = input("Multiplayer? (y/n) ")
 multiplayer = "y"
@@ -21,6 +21,9 @@ elif(multiplayer == "n"):
 else:
     multiplayer = False
     print("Invalid input. Defaulting to single player.")
+
+################################# Connect to WebSocket #################################
+wsHandler.runWsReciever()
 
 ################################# LOAD UP A BASIC WINDOW AND CLOCK #################################
 pygame.init()
