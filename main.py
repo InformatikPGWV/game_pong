@@ -44,6 +44,7 @@ start_button = Button(DISPLAY_W/2-(279/2)-25,
 # ################################# GAME LOOP ##########################
 showMainMenu = False
 
+
 def mainGame():
     global showMainMenu
     running = True
@@ -75,7 +76,7 @@ def mainGame():
             if(multiplayer == True):
                 player2.update()
             ################################# UPDATE WINDOW AND DISPLAY #################################
-            canvas.fill((255,255,255))
+            canvas.fill((255, 255, 255))
             ############################### DRAW PLAYER #################################
             player.draw(canvas)
             if(multiplayer == True):
