@@ -70,7 +70,6 @@ def mainGame():
             if exit_button.isClicked():
                 print("EXIT")
                 running = False
-                wsResciever.run = False
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     running = False
@@ -194,7 +193,7 @@ def handleWsEvent(event):
 wsResciever = threading.Thread(target=runWsReciever)
 wsResciever.start()
 mainGame()
-
+wsResciever.join()
 
 # todo:
 # - add a button to go to the main menu
