@@ -1,11 +1,12 @@
 import pygame
 
+
 class Player(pygame.sprite.Sprite):
     def __init__(self, id):
         pygame.sprite.Sprite.__init__(self)
         self.UP_KEY, self.DOWN_KEY = False, False
         self.velocityY = 0
-        self.centerBottom = (3,8)
+        self.centerBottom = (3, 8)
         self.id = id
         self.sideOffset = 40
         if(self.id == 1):
@@ -18,10 +19,8 @@ class Player(pygame.sprite.Sprite):
             self.rect = self.image.get_rect()
             self.rect.x = 1280 - self.sideOffset - (self.rect.width/2)
             self.rect.y = 100
-        
-        
-        print("Loaded Player"+str(self.id))
 
+        # print("Loaded Player"+str(self.id))
 
     def event(self, event):
         if(self.id == 1):

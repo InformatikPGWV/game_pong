@@ -1,25 +1,28 @@
 # Imports
 try:
     import pygame
-    from websockets import connect
-    import asyncio
     import json
     import threading
+    import websocket
+    import rel
+    import time
+    import pyfiglet
 except:
     import subprocess
     subprocess.call("pip install -r requirements.txt", shell=True)
 
     import pygame
-    from websockets import connect
-    import asyncio
     import json
     import threading
+    import websocket
+    import rel
+    import time
+    import pyfiglet
 
 
-from socket import timeout
 from packages.player import Player
 from packages.utils import Button
-# from wsHandler import runWsReciever
+
 
 # multiplayer = input("Multiplayer? (y/n) ")
 multiplayer = "y"
@@ -78,7 +81,6 @@ def mainGame():
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     running = False
-                    wsResciever.run = False
                 player1.event(event)
                 if(multiplayer == True):
                     player2.event(event)
@@ -104,19 +106,33 @@ def mainGame():
 ################################# WebSockets #################################
 
 
-def runWsReciever():
-    asyncio.run(recieveWsData("wss://wss.astrago.de"))
+def connectToWebSocket():
+    # websocket.enableTrace(True)
+    ws = websocket.WebSocketApp("wss://wss.astrago.de",
+                                on_open=on_open,
+                                on_message=on_message,
+                                on_error=on_error,
+                                on_close=on_close)
+
+    ws.run_forever(dispatcher=rel)  # Set dispatcher to automatic reconnection
+    # rel.signal(2, rel.abort)  # Keyboard Interrupt
+    rel.dispatch()
 
 
-async def recieveWsData(uri):
-    thread = threading.current_thread()
-    async with connect(uri) as ws:
-        while getattr(thread, "run", True):
-            handleWsEvent(await ws.recv())
+def on_error(ws, error):
+    pass
 
 
-def handleWsEvent(event):
-    print(event)
+def on_close(ws, close_status_code, close_msg):
+    pass
+
+
+def on_open(ws):
+    pass
+
+
+def on_message(ws, event):
+    # print(event)
     recievedWsEvent = json.loads(event)
 
     # Pong Game
@@ -190,10 +206,22 @@ def handleWsEvent(event):
 
 
 ################################# END #################################
-wsResciever = threading.Thread(target=runWsReciever)
-wsResciever.start()
-mainGame()
-wsResciever.join()
+
+def showWarning():
+    print(str(pyfiglet.figlet_format("WARNUNG!", font="banner3")))
+    print("Aufgrund eines Bugs darf der Schließen-Klopf des Spiels NICHT gedrückt werden.\nSchließen Sie das Spiel bitte NUR über das Schließen der Konsole.\nVielen Dank.")
+    time.sleep(10)
+
+
+if __name__ == "__main__":
+
+    showWarning()
+
+    wsConnection = threading.Thread(target=connectToWebSocket)
+    wsConnection.start()
+
+    mainGame()
+
 
 # todo:
 # - add a button to go to the main menu
