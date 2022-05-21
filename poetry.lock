@@ -113,6 +113,7 @@ pygame = [
     {file = "pygame-2.1.2-pp37-pypy37_pp73-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:1fddec8829e96424800c806582d73a5173b7d48946cccf7d035839ca09850db8"},
     {file = "pygame-2.1.2.tar.gz", hash = "sha256:d6d0eca28f886f0477cd0721ac688189155a587f2bb8eae740e52ca56c3ad23c"},
 ]
+<<<<<<< HEAD
 rel = [
     {file = "rel-0.4.7-py2.py3-none-any.whl", hash = "sha256:3d06e3630739406723944207177f163a0e615e5a46434e5288c9e63d2b9d16de"},
     {file = "rel-0.4.7-py3-none-any.whl", hash = "sha256:451e39acdeeda458402d078add1c60be36b72ee5747ea5274831a8e46d765768"},
@@ -172,3 +173,5 @@ websockets = [
     {file = "websockets-10.3-pp37-pypy37_pp73-win_amd64.whl", hash = "sha256:3eda1cb7e9da1b22588cefff09f0951771d6ee9fa8dbe66f5ae04cc5f26b2b55"},
     {file = "websockets-10.3.tar.gz", hash = "sha256:fc06cc8073c8e87072138ba1e431300e2d408f054b27047d047b549455066ff4"},
 ]
+=======
+>>>>>>> main
