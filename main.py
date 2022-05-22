@@ -210,7 +210,7 @@ def on_message(ws, event):
 def showWarning():
     print(str(pyfiglet.figlet_format("WARNUNG!", font="banner3")))
     print("Aufgrund eines Bugs darf der Schließen-Klopf des Spielfensters NICHT gedrückt werden.\nSchließen Sie das Spiel bitte NUR über den Schließen-Knopf der Konsole.\nVielen Dank.")
-    time.sleep(10)
+    time.sleep(2)
 
 
 if __name__ == "__main__":
