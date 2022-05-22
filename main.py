@@ -222,6 +222,8 @@ if __name__ == "__main__":
 
     mainGame()
 
+    wsConnection.join()
+
 
 # todo:
 # - add a button to go to the main menu
