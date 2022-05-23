@@ -13,12 +13,12 @@ class Player(pygame.sprite.Sprite):
             self.image = pygame.image.load('assets/images/player/player1.png')
             self.rect = self.image.get_rect()
             self.rect.x = self.sideOffset - (self.rect.width/2)
-            self.rect.y = 100
+            self.rect.y = 400
         elif(self.id == 2):
             self.image = pygame.image.load('assets/images/player/player2.png')
             self.rect = self.image.get_rect()
             self.rect.x = 1280 - self.sideOffset - (self.rect.width/2)
-            self.rect.y = 100
+            self.rect.y = 400
 
         # print("Loaded Player"+str(self.id))
 

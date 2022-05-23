@@ -7,6 +7,7 @@ try:
     import rel
     import time
     import pyfiglet
+    import random
 except:
     import subprocess
     subprocess.call("pip install -r requirements.txt", shell=True)
@@ -18,9 +19,10 @@ except:
     import rel
     import time
     import pyfiglet
-
+    import random
 
 from packages.player import Player
+from packages.ball import Ball
 from packages.utils import Button
 
 
@@ -45,6 +47,7 @@ clock = pygame.time.Clock()
 player1 = Player(1)
 if(multiplayer == True):
     player2 = Player(2)
+ball = Ball()
 
 ################################# LOAD BUTTONS ###################################
 start_img = pygame.image.load("assets/images/buttons/start.png")
@@ -57,7 +60,6 @@ start_button = Button(DISPLAY_W/2-(279/2)-25,
                       DISPLAY_H/2-(126/4), start_img, 0.5)
 # ################################# GAME LOOP ##########################
 showMainMenu = False
-
 
 def mainGame():
     global showMainMenu
@@ -89,12 +91,14 @@ def mainGame():
             player1.update()
             if(multiplayer == True):
                 player2.update()
+            ball.update(player1, player2)
             ################################# UPDATE WINDOW AND DISPLAY #################################
-            canvas.fill((255, 255, 255))
+            canvas.fill((0, 0, 0))
             ############################### DRAW PLAYER #################################
             player1.draw(canvas)
             if(multiplayer == True):
                 player2.draw(canvas)
+            ball.draw(canvas)
             #############################################################################
         clock.tick(60)  # LOCK TO 60 FRAMES PER SECOND
         window.blit(canvas, (0, 0))
@@ -215,7 +219,7 @@ def showWarning():
 
 if __name__ == "__main__":
 
-    showWarning()
+    # showWarning()
 
     wsConnection = threading.Thread(target=connectToWebSocket)
     wsConnection.start()
