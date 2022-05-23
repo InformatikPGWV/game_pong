@@ -43,10 +43,12 @@ class Ball(pygame.sprite.Sprite):
             print("Collision with left")
             self.rect.x = (1280/2) - (self.rect.width/2)
             self.rect.y = (720/2) - (self.rect.height/2)
+            self.velocityX = self.velocityX / 2
         elif self.rect.x >= 1255:
             print("Collision with right")
             self.rect.x = (1280/2) - (self.rect.width/2)
             self.rect.y = (720/2) - (self.rect.height/2)
+            self.velocityX = self.velocityX / 2
         
     
         self.rect.y += self.velocityY
