@@ -52,8 +52,13 @@ class Player(pygame.sprite.Sprite):
     def update(self):
         self.velocityY = 0
         if self.UP_KEY:
-            self.velocityY = -2
+            self.velocityY = -4
             self.rect.y += self.velocityY
         elif self.DOWN_KEY:
-            self.velocityY = 2
+            self.velocityY = 4
             self.rect.y += self.velocityY
+        
+        if self.rect.y <= 0:
+            self.rect.y = 0
+        elif self.rect.y >= 645:
+            self.rect.y = 645

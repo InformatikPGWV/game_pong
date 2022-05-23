@@ -60,9 +60,11 @@ start_button = Button(DISPLAY_W/2-(279/2)-25,
                       DISPLAY_H/2-(126/4), start_img, 0.5)
 # ################################# GAME LOOP ##########################
 showMainMenu = False
+startup = True
 
 def mainGame():
     global showMainMenu
+    global startup
     running = True
     while running:
 
@@ -100,10 +102,13 @@ def mainGame():
                 player2.draw(canvas)
             ball.draw(canvas)
             #############################################################################
+        
         clock.tick(60)  # LOCK TO 60 FRAMES PER SECOND
         window.blit(canvas, (0, 0))
         pygame.display.update()
-        # print(clock.get_fps())
+        if startup:
+            time.sleep(3)
+            startup = False
     print("\n\n\n\nThanks for Playing...")
 
 
