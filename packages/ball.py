@@ -15,6 +15,8 @@ class Ball(pygame.sprite.Sprite):
         self.rect = self.image.get_rect()
         self.rect.x = (1280/2) - (self.rect.width/2)
         self.rect.y = (720/2) - (self.rect.height/2)
+        
+        self.hitPath = "assets/sounds/hit.wav"
 
     def draw(self, display):
         display.blit(self.image, self.rect)
@@ -22,15 +24,16 @@ class Ball(pygame.sprite.Sprite):
     def update(self, player1,player2):
         if self.rect.colliderect(player1.rect):
             print("Collision with player1")
+            pygame.mixer.Sound.play(pygame.mixer.Sound(self.hitPath))
             self.velocityX = -self.velocityX * 1.075
             self.velocityY = self.velocityY * 1.075
+            
+            
         if self.rect.colliderect(player2.rect):
             print("Collision with player2")
+            pygame.mixer.Sound.play(pygame.mixer.Sound(self.hitPath))
             self.velocityX = -self.velocityX * 1.075
             self.velocityY = self.velocityY * 1.075
-        
-
-
 
         if self.rect.y <= 0:
             print("Collision with top")
@@ -44,12 +47,14 @@ class Ball(pygame.sprite.Sprite):
             self.rect.x = (1280/2) - (self.rect.width/2)
             self.rect.y = (720/2) - (self.rect.height/2)
             self.velocityX = self.velocityX / 2
+            returnMessage = "goalPlayer2"
         elif self.rect.x >= 1255:
             print("Collision with right")
             self.rect.x = (1280/2) - (self.rect.width/2)
             self.rect.y = (720/2) - (self.rect.height/2)
             self.velocityX = self.velocityX / 2
-        
+            returnMessage = "goalPlayer1"
     
         self.rect.y += self.velocityY
         self.rect.x += self.velocityX
+        return returnMessage

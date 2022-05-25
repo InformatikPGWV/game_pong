@@ -88,12 +88,19 @@ def mainGame():
                 player1.event(event)
                 if(multiplayer == True):
                     player2.event(event)
+                
 
             ################################# UPDATE/ Animate SPRITE #################################
             player1.update()
             if(multiplayer == True):
                 player2.update()
-            ball.update(player1, player2)
+            ballEvent = ball.update(player1, player2)
+            if(ballEvent == "goalPlayer1"):
+                player1.score += 1
+                print("Player 1 scored!")
+            if(ballEvent == "goalPlayer2") and (multiplayer == True):
+                player2.score += 1
+                print("Player 2 scored!")
             ################################# UPDATE WINDOW AND DISPLAY #################################
             canvas.fill((0, 0, 0))
             ############################### DRAW PLAYER #################################

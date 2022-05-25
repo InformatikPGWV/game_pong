@@ -1,10 +1,10 @@
 import pygame
 
-
 class Player(pygame.sprite.Sprite):
     def __init__(self, id):
         pygame.sprite.Sprite.__init__(self)
         self.UP_KEY, self.DOWN_KEY = False, False
+        self.score = 0
         self.velocityY = 0
         self.centerBottom = (3, 8)
         self.id = id
@@ -62,3 +62,6 @@ class Player(pygame.sprite.Sprite):
             self.rect.y = 0
         elif self.rect.y >= 645:
             self.rect.y = 645
+            
+    def getScore(self):
+        return self.score
