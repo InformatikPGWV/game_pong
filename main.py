@@ -62,6 +62,12 @@ start_button = Button(DISPLAY_W/2-(279/2)-25,
 showMainMenu = False
 startup = True
 
+green = (0, 255, 0)
+blue = (0, 0, 128)
+
+font = pygame.font.Font('assets/Roboto-Black.ttf', 32)
+text = font.render('GeeksForGeeks', True, green, blue)
+
 def mainGame():
     global showMainMenu
     global startup
@@ -95,6 +101,9 @@ def mainGame():
             if(multiplayer == True):
                 player2.update()
             ballEvent = ball.update(player1, player2)
+            
+            
+            
             if(ballEvent == "goalPlayer1"):
                 player1.score += 1
                 print("Player 1 scored!")
@@ -104,6 +113,7 @@ def mainGame():
             ################################# UPDATE WINDOW AND DISPLAY #################################
             canvas.fill((0, 0, 0))
             ############################### DRAW PLAYER #################################
+            canvas.blit(font.render('GeeksForGeeks', True, green, blue), (200,200))
             player1.draw(canvas)
             if(multiplayer == True):
                 player2.draw(canvas)
@@ -114,7 +124,7 @@ def mainGame():
         window.blit(canvas, (0, 0))
         pygame.display.update()
         if startup:
-            time.sleep(3)
+            time.sleep(1)
             startup = False
     print("\n\n\n\nThanks for Playing...")
 
