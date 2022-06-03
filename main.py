@@ -66,7 +66,7 @@ green = (0, 255, 0)
 blue = (0, 0, 128)
 
 font = pygame.font.Font('assets/Roboto-Black.ttf', 32)
-text = font.render('GeeksForGeeks', True, green, blue)
+text = font.render('TEST', True, green, blue)
 
 def mainGame():
     global showMainMenu
@@ -146,6 +146,7 @@ def connectToWebSocket():
 
 
 def on_error(ws, error):
+    print(error)
     pass
 
 
