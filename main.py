@@ -53,20 +53,21 @@ ball = Ball()
 start_img = pygame.image.load("assets/images/buttons/start.png")
 exit_img = pygame.image.load("assets/images/buttons/exit.png")
 
+mainMenu_startButton = Button(DISPLAY_W/2-(279/2)-25, DISPLAY_H/2-(126/4), start_img, 0.5)
+mainMenu_exitButton = Button(DISPLAY_W/2-(240/2)+(279/2)+10,DISPLAY_H/2-(126/4), exit_img, 0.5)
 
-exit_button = Button(DISPLAY_W/2-(240/2)+(279/2)+10,
-                     DISPLAY_H/2-(126/4), exit_img, 0.5)
-start_button = Button(DISPLAY_W/2-(279/2)-25,
-                      DISPLAY_H/2-(126/4), start_img, 0.5)
+game_exitButton = Button(640,455, exit_img, 0.5)
+
+
+
 # ################################# GAME LOOP ##########################
-showMainMenu = False
+showMainMenu = True
 startup = True
 
 green = (0, 255, 0)
 blue = (0, 0, 128)
 
 font = pygame.font.Font('assets/Roboto-Black.ttf', 32)
-text = font.render('TEST', True, green, blue)
 
 
 def mainGame():
@@ -74,14 +75,14 @@ def mainGame():
     global startup
     running = True
     while running:
-
+        canvas.fill((0, 0, 0))
         if showMainMenu:
-            start_button.draw(canvas)
-            exit_button.draw(canvas)
-            if start_button.isClicked():
+            mainMenu_startButton.draw(canvas)
+            mainMenu_exitButton.draw(canvas)
+            if mainMenu_startButton.isClicked():
                 print("Start")
                 showMainMenu = False
-            if exit_button.isClicked():
+            if mainMenu_exitButton.isClicked():
                 print("EXIT")
                 running = False
             for event in pygame.event.get():
@@ -89,30 +90,39 @@ def mainGame():
                     running = False
         else:
             ################################# CHECK PLAYER INPUT #################################
+            # game_exitButton.draw(canvas)
+            # if game_exitButton.isClicked():
+            #     print("exit from game")
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     running = False
                 player1.event(event)
-                if(multiplayer == True):
-                    player2.event(event)
+                player2.event(event)
 
             ################################# UPDATE/ Animate SPRITE #################################
-            player1.update()
-            if(multiplayer == True):
+            
+            if startup:
+                canvas.blit(font.render("Beide Spieler müssen Hoch drücken um zustarten!", True, (255, 255, 255)), (10, 10))
+                if player1.UP_KEY == True and player2.UP_KEY == True:
+                    startup = False
+            else:
+                player1.update()
                 player2.update()
-            ballEvent = ball.update(player1, player2)
-
-            if(ballEvent == "goalPlayer1"):
-                player1.score += 1
-                print("Player 1 scored!")
-            if(ballEvent == "goalPlayer2") and (multiplayer == True):
-                player2.score += 1
-                print("Player 2 scored!")
+                ballEvent = ball.update(player1, player2)#
+                
+        
+                if(ballEvent == "goalPlayer1"):
+                    player1.score += 1
+                    print("Player 1 scored!")
+                if(ballEvent == "goalPlayer2") and (multiplayer == True):
+                    player2.score += 1
+                    print("Player 2 scored!")
             ################################# UPDATE WINDOW AND DISPLAY #################################
-            canvas.fill((0, 0, 0))
+            
+            ############################### DRAW PLAYER Scores #################################
+            canvas.blit(font.render(str(player1.score), True, (255, 255, 255)), (10, 10))
+            canvas.blit(font.render(str(player2.score), True, (255, 255, 255)), (1250, 10))
             ############################### DRAW PLAYER #################################
-            canvas.blit(font.render('GeeksForGeeks',
-                        True, green, blue), (200, 200))
             player1.draw(canvas)
             if(multiplayer == True):
                 player2.draw(canvas)
@@ -122,9 +132,6 @@ def mainGame():
         clock.tick(60)  # LOCK TO 60 FRAMES PER SECOND
         window.blit(canvas, (0, 0))
         pygame.display.update()
-        if startup:
-            time.sleep(1)
-            startup = False
     print("\n\n\n\nThanks for Playing...")
 
 
@@ -133,7 +140,7 @@ def mainGame():
 
 def connectToWebSocket():
     # websocket.enableTrace(True)
-    ws = websocket.WebSocketApp("ws://s1.astrago.de:6969",  # wss://wss.astrago.de
+    ws = websocket.WebSocketApp("ws://s1.astrago.de:6969",  # wss://wss.astrago.de #    "ws://s1.astrago.de:6969"
                                 on_open=on_open,
                                 on_message=on_message,
                                 on_error=on_error,
@@ -170,32 +177,17 @@ def on_message(ws, event):
             # Up Key
             if recievedWsEvent["data"]["action"] == "upPressed":
                 player1.UP_KEY = True
-                player1.update()
-                player1.draw(canvas)
-                window.blit(canvas, (0, 0))
-                pygame.display.update()
 
             elif recievedWsEvent["data"]["action"] == "upReleased":
                 player1.UP_KEY = False
-                player1.update()
-                player1.draw(canvas)
-                window.blit(canvas, (0, 0))
-                pygame.display.update()
 
             # Down Key
             if recievedWsEvent["data"]["action"] == "downPressed":
                 player1.DOWN_KEY = True
-                player1.update()
-                player1.draw(canvas)
-                window.blit(canvas, (0, 0))
-                pygame.display.update()
 
             elif recievedWsEvent["data"]["action"] == "downReleased":
                 player1.DOWN_KEY = False
-                player1.update()
-                player1.draw(canvas)
-                window.blit(canvas, (0, 0))
-                pygame.display.update()
+
 
         # Actions of 2nd Player
         if recievedWsEvent["sender"] == "player2":
@@ -203,32 +195,18 @@ def on_message(ws, event):
             # Up Key
             if recievedWsEvent["data"]["action"] == "upPressed":
                 player2.UP_KEY = True
-                player2.update()
-                player2.draw(canvas)
-                window.blit(canvas, (0, 0))
-                pygame.display.update()
 
             elif recievedWsEvent["data"]["action"] == "upReleased":
                 player2.UP_KEY = False
-                player2.update()
-                player2.draw(canvas)
-                window.blit(canvas, (0, 0))
-                pygame.display.update()
+
 
             # Down Key
             if recievedWsEvent["data"]["action"] == "downPressed":
                 player2.DOWN_KEY = True
-                player2.update()
-                player2.draw(canvas)
-                window.blit(canvas, (0, 0))
-                pygame.display.update()
 
             elif recievedWsEvent["data"]["action"] == "downReleased":
                 player2.DOWN_KEY = False
-                player2.update()
-                player2.draw(canvas)
-                window.blit(canvas, (0, 0))
-                pygame.display.update()
+
 
 
 ################################# END #################################

@@ -6,6 +6,7 @@ class Player(pygame.sprite.Sprite):
         self.UP_KEY, self.DOWN_KEY = False, False
         self.score = 0
         self.velocityY = 0
+        self.speedY = 5
         self.centerBottom = (3, 8)
         self.id = id
         self.sideOffset = 40
@@ -52,10 +53,10 @@ class Player(pygame.sprite.Sprite):
     def update(self):
         self.velocityY = 0
         if self.UP_KEY:
-            self.velocityY = -4
+            self.velocityY = -self.speedY
             self.rect.y += self.velocityY
         elif self.DOWN_KEY:
-            self.velocityY = 4
+            self.velocityY = self.speedY
             self.rect.y += self.velocityY
         
         if self.rect.y <= 0:
