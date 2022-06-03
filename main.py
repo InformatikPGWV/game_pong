@@ -68,6 +68,7 @@ blue = (0, 0, 128)
 font = pygame.font.Font('assets/Roboto-Black.ttf', 32)
 text = font.render('TEST', True, green, blue)
 
+
 def mainGame():
     global showMainMenu
     global startup
@@ -94,16 +95,13 @@ def mainGame():
                 player1.event(event)
                 if(multiplayer == True):
                     player2.event(event)
-                
 
             ################################# UPDATE/ Animate SPRITE #################################
             player1.update()
             if(multiplayer == True):
                 player2.update()
             ballEvent = ball.update(player1, player2)
-            
-            
-            
+
             if(ballEvent == "goalPlayer1"):
                 player1.score += 1
                 print("Player 1 scored!")
@@ -113,13 +111,14 @@ def mainGame():
             ################################# UPDATE WINDOW AND DISPLAY #################################
             canvas.fill((0, 0, 0))
             ############################### DRAW PLAYER #################################
-            canvas.blit(font.render('GeeksForGeeks', True, green, blue), (200,200))
+            canvas.blit(font.render('GeeksForGeeks',
+                        True, green, blue), (200, 200))
             player1.draw(canvas)
             if(multiplayer == True):
                 player2.draw(canvas)
             ball.draw(canvas)
             #############################################################################
-        
+
         clock.tick(60)  # LOCK TO 60 FRAMES PER SECOND
         window.blit(canvas, (0, 0))
         pygame.display.update()
@@ -134,7 +133,7 @@ def mainGame():
 
 def connectToWebSocket():
     # websocket.enableTrace(True)
-    ws = websocket.WebSocketApp("wss://wss.astrago.de",
+    ws = websocket.WebSocketApp("ws://s1.astrago.de:6969",  # wss://wss.astrago.de
                                 on_open=on_open,
                                 on_message=on_message,
                                 on_error=on_error,
