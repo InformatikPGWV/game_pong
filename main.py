@@ -66,7 +66,7 @@ blue = (0, 0, 128)
 font16 = pygame.font.Font('assets/Roboto-Black.ttf', 16)
 font32 = pygame.font.Font('assets/Roboto-Black.ttf', 32)
 
-
+showEndScreen = False
 running = True
 
 def current_milli_time():
@@ -90,6 +90,21 @@ def loadSettings():
     LimitedGameTimeMinutes = settings.data["LimitedGameTimeMinutes"]
     LimitedGameTimeSeconds = settings.data["LimitedGameTimeSeconds"]
     print("Settings loaded")
+    
+def resetGame():
+    global player1
+    global player2
+    global ball
+    global startup
+    global runtime
+    
+    loadSettings()
+    
+    player1.score = 0
+    player2.score = 0
+    ball.centerBall()
+    startup = True
+    runtime = 0
 
 def quit():
     global running
@@ -114,6 +129,8 @@ def countDown():
     global gameStartTime
     global secondsTimePlayed
     global minutesTimePlayed
+    global showEndScreen
+    global runtime
 
     runtime = current_second_time() - gameStartTime
     time = ((LimitedGameTimeMinutes * 60) + LimitedGameTimeSeconds) - runtime
@@ -123,12 +140,15 @@ def countDown():
         secondsTimePlayed = "0" + str(secondsTimePlayed)
     if minuteTimePlayed < 10:
         minutesTimePlayed = "0" + str(minuteTimePlayed)
+    if time == 0:
+        showEndScreen = True
 
 def mainGame():
     global gameStartTime
     global secondsTimePlayed
     global minutesTimePlayed
     global showMainMenu
+    global showEndScreen
     global ws
     running = True
     startup = True
@@ -146,11 +166,31 @@ def mainGame():
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     running = False
+        elif showEndScreen:
+            mainMenu_startButton.draw(canvas)
+            mainMenu_exitButton.draw(canvas)
+            if mainMenu_startButton.isClicked():
+                resetGame()
+                showEndScreen = False
+            if mainMenu_exitButton.isClicked():
+                quit()
+            
+            if player1.score > player2.score:
+                winMessage = font(32).render("Spieler 1 hat gewonnen!", True, (255, 0, 0))
+            if player2.score > player1.score:
+                winMessage = font(32).render("Spieler 2 hat gewonnen!", True, (0, 0, 255))
+            if player1.score == player2.score:
+                winMessage = font(32).render("Unentschieden!", True, (255, 255, 255))
+            canvas.blit(winMessage, (xCenter - winMessage.get_width() // 2,  yCenter - 250 - winMessage.get_height() // 6))
+            
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    quit()
         else:
             ################################# CHECK PLAYER INPUT #################################
-            game_exitButton.draw(canvas)
-            if game_exitButton.isClicked():
-                quit()
+            # game_exitButton.draw(canvas)
+            # if game_exitButton.isClicked():
+            #     quit()
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     quit()
