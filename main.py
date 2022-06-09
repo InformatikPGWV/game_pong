@@ -201,10 +201,12 @@ def mainGame():
                     quit()
                 if event.type == pygame.KEYUP:
                     if event.key == pygame.K_RETURN:
-                        subprocess.call("python settingsmaker.py", shell=True)
+                        subprocess.call("settingsmaker.py",shell=True)
                         resetGame()
                         
         elif showEndScreen:
+            creditsMessage = font(32).render("Game made by: Joel Wiedemeier, Justus Seeck, Jonas Klickermann, Leif Rindermann!", True, (255, 255, 255))
+            canvas.blit(creditsMessage, (xCenter - creditsMessage.get_width() // 2,  yCenter *2  - creditsMessage.get_height() - 15))
             mainMenu_startButton.draw(canvas)
             mainMenu_exitButton.draw(canvas)
             if mainMenu_startButton.isClicked():
@@ -224,7 +226,6 @@ def mainGame():
                 if event.type == pygame.QUIT:
                     quit()
         elif showPauseMenu:
-            # pauseStartTime = current_second_time()
             pauseTitle = font(64).render("Pause", True, (255, 255, 255))
             canvas.blit(pauseTitle, (xCenter - pauseTitle.get_width() // 2,  yCenter - 250 - pauseTitle.get_height() // 6))
             
@@ -381,10 +382,3 @@ if __name__ == "__main__":
 
     wsConnection.join()
 
-
-# todo:
-# - add a button to go to the main menu
-# - add a button to go to the credits
-# - add a button to go to the instructions
-# - add a button to go to the high scores
-# - add a button to go to the options
