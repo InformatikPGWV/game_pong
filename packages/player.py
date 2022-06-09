@@ -63,6 +63,3 @@ class Player(pygame.sprite.Sprite):
             self.rect.y = 0
         elif self.rect.y >= 645:
             self.rect.y = 645
-            
-    def getScore(self):
-        return self.score

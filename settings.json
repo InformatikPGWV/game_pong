@@ -1,5 +1,1 @@
-{
-    "infiniteGame" : false,
-    "LimitedGameTimeMinutes": 0,
-    "LimitedGameTimeSeconds": 5
-}
+{"infiniteGame": true, "LimitedGameTimeMinutes": 0, "LimitedGameTimeSeconds": 15}

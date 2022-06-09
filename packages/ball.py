@@ -49,7 +49,7 @@ class Ball(pygame.sprite.Sprite):
     def update(self, player1,player2):
         returnMessage = ""
         if self.rect.colliderect(player1.rect):
-            print("Collision with player1")
+            # print("Collision with player1")
             pygame.mixer.Sound.play(pygame.mixer.Sound(self.sounds["hit"]))
             if self.velocityX > -self.maxVelocityX:
                 self.velocityX = -self.velocityX * 1.075
@@ -60,7 +60,7 @@ class Ball(pygame.sprite.Sprite):
             
             
         if self.rect.colliderect(player2.rect):
-            print("Collision with player2")
+            # print("Collision with player2")
             pygame.mixer.Sound.play(pygame.mixer.Sound(self.sounds["hit"]))
             if self.velocityX > -self.maxVelocityX:
                 self.velocityX = -self.velocityX * 1.075
@@ -70,20 +70,20 @@ class Ball(pygame.sprite.Sprite):
             print(self.velocityX)
 
         if self.rect.y <= 0:
-            print("Collision with top")
+            # print("Collision with top")
             self.velocityY = -self.velocityY
         if self.rect.y >= 705:
-            print("Collision with bottom")
+            # print("Collision with bottom")
             self.velocityY = -self.velocityY
         
         if self.rect.x <= 0:
-            print("Collision with left")
+            # print("Collision with left")
             self.centerBall()
             self.validateMinSpeed()
             pygame.mixer.Sound.play(pygame.mixer.Sound(self.sounds["goal"]))
             returnMessage = "goalPlayer2"
         elif self.rect.x >= 1255:
-            print("Collision with right")
+            # print("Collision with right")
             self.centerBall()
             self.validateMinSpeed()
             pygame.mixer.Sound.play(pygame.mixer.Sound(self.sounds["goal"]))
