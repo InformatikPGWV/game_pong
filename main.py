@@ -23,6 +23,7 @@ except:
     import random
     import sys
 
+from tkinter.messagebox import YESNOCANCEL
 from packages.player import Player
 from packages.ball import Ball
 from packages.utils import Button
@@ -35,6 +36,9 @@ DISPLAY_W, DISPLAY_H = 1280, 720
 canvas = pygame.Surface((DISPLAY_W, DISPLAY_H))
 window = pygame.display.set_mode(((DISPLAY_W, DISPLAY_H)))
 clock = pygame.time.Clock()
+
+xCenter = DISPLAY_W / 2
+yCenter =   DISPLAY_H / 2
 
 settings = jsonHandler("settings.json")
 ################################# LOAD PLAYER ###################################
@@ -53,11 +57,8 @@ mainMenu_exitButton = Button(DISPLAY_W/2-(240/2)+(279/2)+10,DISPLAY_H/2-(126/4),
 
 game_exitButton = Button(640,455, exit_img, 0.5)
 
-timeMode = "upcounting"
-
 # ################################# GAME LOOP ##########################
 showMainMenu = True
-startup = True
 
 green = (0, 255, 0)
 blue = (0, 0, 128)
@@ -81,10 +82,14 @@ font16.render("Connecting to server...", True, (255, 255, 255))
 
 def loadSettings():
     global settings
+    global infiniteGame
+    global LimitedGameTimeMinutes
+    global LimitedGameTimeSeconds
     settings.getData()
     infiniteGame = settings.data["infiniteGame"]
     LimitedGameTimeMinutes = settings.data["LimitedGameTimeMinutes"]
     LimitedGameTimeSeconds = settings.data["LimitedGameTimeSeconds"]
+    print("Settings loaded")
 
 def quit():
     global running
@@ -92,10 +97,11 @@ def quit():
     ws.close()
     exit()
 
-def upcount():
+def countUp():
     global gameStartTime
     global secondsTimePlayed
     global minutesTimePlayed
+    runtime = gameStartTime - current_second_time()
     time = current_second_time() - gameStartTime
     minuteTimePlayed = int(time / 60)
     secondsTimePlayed = int(time % 60)
@@ -104,8 +110,19 @@ def upcount():
     if minuteTimePlayed < 10:
         minutesTimePlayed = "0" + str(minuteTimePlayed)
 
-def downCount():
+def countDown():
     global gameStartTime
+    global secondsTimePlayed
+    global minutesTimePlayed
+
+    runtime = current_second_time() - gameStartTime
+    time = ((LimitedGameTimeMinutes * 60) + LimitedGameTimeSeconds) - runtime
+    minuteTimePlayed = int(time / 60)
+    secondsTimePlayed = int(time % 60)
+    if secondsTimePlayed < 10:
+        secondsTimePlayed = "0" + str(secondsTimePlayed)
+    if minuteTimePlayed < 10:
+        minutesTimePlayed = "0" + str(minuteTimePlayed)
 
 def mainGame():
     global gameStartTime
@@ -113,7 +130,10 @@ def mainGame():
     global minutesTimePlayed
     global showMainMenu
     global ws
+    running = True
+    startup = True
     
+    loadSettings()
     while running:
         canvas.fill((0, 0, 0))
         if showMainMenu:
@@ -121,7 +141,6 @@ def mainGame():
             mainMenu_exitButton.draw(canvas)
             if mainMenu_startButton.isClicked():
                 showMainMenu = False
-                gameStartTime = current_second_time()
             if mainMenu_exitButton.isClicked():
                 quit()
             for event in pygame.event.get():
@@ -141,13 +160,15 @@ def mainGame():
             ################################# UPDATE/ Animate SPRITE #################################
             
             if startup:
-                canvas.blit(font32.render("Beide Spieler müssen Hoch drücken um zu starten!", True, (255, 255, 255)), (285, 10))
+                infoMessage = font(32).render("Beide Spieler müssen Hoch drücken um zu starten!", True, (255, 255, 255))
+                canvas.blit(infoMessage, (xCenter - infoMessage.get_width() // 2,  infoMessage.get_height() // 6))
                 if player1.UP_KEY == True and player2.UP_KEY == True:
                     startup = False
                 if player1.UP_KEY == True:
                     canvas.blit(tick, (10,50))
                 if player2.UP_KEY == True:
                     canvas.blit(tick, (1240,50))
+                gameStartTime = current_second_time()
             else:
                 player1.update()
                 player2.update()
@@ -156,9 +177,13 @@ def mainGame():
                     player1.score += 1
                 if(ballEvent == "goalPlayer2"):
                     player2.score += 1
+                if(infiniteGame == False):
+                    countDown()
+                elif(infiniteGame == True):
+                    countUp()
+                time = font(32).render(f"{minutesTimePlayed}:{secondsTimePlayed}", True, (255, 255, 255))
+                canvas.blit(time, (xCenter - time.get_width() // 2,  time.get_height() // 6))
                 
-                upcount()
-                canvas.blit(font(32).render(f"{minutesTimePlayed}:{secondsTimePlayed}", True, (255, 255, 255)), (650, 10))
                 canvas.blit(font(32).render(str(player1.score), True, (255, 255, 255)), (10, 10))
                 canvas.blit(font(32).render(str(player2.score), True, (255, 255, 255)), (1248, 10))
                 canvas.blit(font(16).render(str(int(clock.get_fps())), True, (255, 255, 255)), (0, 704))
