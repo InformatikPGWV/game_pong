@@ -1,6 +1,6 @@
 # game_pong
 
-# Aufgabenverteilung
+### Aufgabenverteilung
 Grafiken: Jonas
 
 Gamecode: Joel
