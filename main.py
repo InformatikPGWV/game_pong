@@ -217,6 +217,9 @@ def mainGame():
                         subprocess.call("settingsmaker.py",shell=True)
                         resetGame()      
         elif showEndScreen:
+            ##########################
+            # END SCREEN
+            ##########################
             # Zeige Text
             creditsMessage = font(32).render("Game made by: Joel Wiedemeier, Justus Seeck, Jonas Klickermann, Leif Rindermann!", True, (255, 255, 255))
             canvas.blit(creditsMessage, (xCenter - creditsMessage.get_width() // 2,  yCenter *2  - creditsMessage.get_height() - 15))
@@ -226,7 +229,6 @@ def mainGame():
             if mainMenu_startButton.isClicked():
                 resetGame()
                 showEndScreen = False
-                # showMainMenu = True
             if mainMenu_exitButton.isClicked():
                 quit()
             
@@ -242,6 +244,9 @@ def mainGame():
                 if event.type == pygame.QUIT:
                     quit()
         elif showPauseMenu:
+            ##########################
+            # PAUSE MENÜ
+            ##########################
             # Zeige Puase Text
             pauseTitle = font(64).render("Pause", True, (255, 255, 255))
             canvas.blit(pauseTitle, (xCenter - pauseTitle.get_width() // 2,  yCenter - 250 - pauseTitle.get_height() // 6))
@@ -254,7 +259,9 @@ def mainGame():
                 if event.type == pygame.QUIT:
                     quit()
         else:
-            ################################# CHECK PLAYER INPUT #################################
+            ##########################
+            # MAIN GAME LOOP
+            ##########################
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     quit()

@@ -11,10 +11,10 @@ def timeSettings():
     global LimitedGameTimeSeconds
     global LimitedGameTimeMinutes
     print(f"Alte Einstellungen \nLaufzeit Minuten: {oldLimitedGameTimeMinutes} \nLaufzeit Sekunden: {oldLimitedGameTimeSeconds}")
-    LimitedGameTimeMinutes = int(input("Bitte geben Sie die Minuten ein (Int): "))
+    LimitedGameTimeMinutes = input("Bitte geben Sie die Minuten ein (Int): ")
     if(LimitedGameTimeMinutes == ""):
         LimitedGameTimeMinutes = oldLimitedGameTimeMinutes
-    LimitedGameTimeSeconds = int(input("Bitte geben Sie die Sekunden ein (Int): "))
+    LimitedGameTimeSeconds = input("Bitte geben Sie die Sekunden ein (Int): ")
     if(LimitedGameTimeSeconds == ""):
         LimitedGameTimeSeconds = oldLimitedGameTimeSeconds
         
