@@ -30,48 +30,43 @@ from packages.utils import Button
 from packages.jsonHandler import jsonHandler
 
 
-################################# LOAD UP A BASIC WINDOW AND CLOCK #################################
+# initialisiere pygame relevante Variablen
 pygame.init()
 DISPLAY_W, DISPLAY_H = 1280, 720
 canvas = pygame.Surface((DISPLAY_W, DISPLAY_H))
 window = pygame.display.set_mode(((DISPLAY_W, DISPLAY_H)))
+pygame.display.set_caption("Pong - Das Spiel damit auch deine letzte Freundschaft zuende ist!")
 clock = pygame.time.Clock()
 
-xCenter = DISPLAY_W / 2
-yCenter =   DISPLAY_H / 2
-
-settings = jsonHandler("settings.json")
-################################# LOAD PLAYER ###################################
+# Erstelle Objekte
 player1 = Player(1)
 player2 = Player(2)
 ball = Ball()
+settings = jsonHandler("settings.json")
 
-################################# LOAD BUTTONS ###################################
+# Lade Bilder
 start_img = pygame.image.load("assets/images/buttons/start.png")
 exit_img = pygame.image.load("assets/images/buttons/exit.png")
-
 tick = pygame.image.load("assets/images/tick.png")
 
+# Initialisiere die Buttons
 mainMenu_startButton = Button(DISPLAY_W/2-(279/2)-25, DISPLAY_H/2-(126/4), start_img, 0.5)
 mainMenu_exitButton = Button(DISPLAY_W/2-(240/2)+(279/2)+10,DISPLAY_H/2-(126/4), exit_img, 0.5)
-
 game_exitButton = Button(640,455, exit_img, 0.5)
 
-# ################################# GAME LOOP ##########################
+
+# Setze sonstige Variablen
 showMainMenu = True
 showPauseMenu = False
-
 showEndScreen = False
 running = True
 lastCount = 0
-
 secondsTimePlayed = 0
 minutesTimePlayed = 0
+xCenter = DISPLAY_W / 2
+yCenter =   DISPLAY_H / 2
 
-
-def current_milli_time():
-    return round(time.time() * 1000)
-
+##############################################################
 def current_second_time():
     return round(time.time())
 
@@ -85,11 +80,14 @@ def loadSettings():
     global LimitedGameTimeMinutes
     global LimitedGameTimeSeconds
     global gameTime
-    settings.getData()
+    
+    settings.getData() # Erhalte aktuelle Einstellungen
     infiniteGame = settings.data["infiniteGame"]
     LimitedGameTimeMinutes = settings.data["LimitedGameTimeMinutes"]
     LimitedGameTimeSeconds = settings.data["LimitedGameTimeSeconds"]
+    
     if not infiniteGame:
+        # Setze die Spielzeit, wenn das Game begrenzt ist
         gameTime = LimitedGameTimeMinutes * 60 + LimitedGameTimeSeconds
     else:
         gameTime = 0
@@ -101,20 +99,18 @@ def resetGame():
     global player2
     global ball
     global startup
-    global runtime
     global lastCount
     global gameTime
     global LimitedGameTimeMinutes
     global LimitedGameTimeSeconds
     
     loadSettings()
-    
+    # Setze Variablen zurück
     player1.score = 0
     player2.score = 0
     ball.centerBall()
     startup = True
-    runtime = 0
-    lastCount = current_second_time()
+    lastCount = 0
     print("Reset complete!")
 
 def quit():
@@ -127,47 +123,51 @@ def quit():
 
 
 def upCount():
-    # write a script thats counts up indepentantly from the main thread
     global secondsTimePlayed
     global minutesTimePlayed
     global gameTime
     global lastCount
     global showEndScreen
     
+    # Zöhle die Zeit ohne time.sleep(x), da time.sleep() den Thread blockt
     diff = current_second_time() - lastCount
     if (diff > 0):
         gameTime = gameTime + 1
         lastCount = current_second_time()
-        
+    
+    # Forme in Minuten : Sekunden um
     minuteTimePlayed = int(gameTime / 60)
     secondsTimePlayed = int(gameTime % 60)
+    # Setze "0" davor, wenn die Zahl einstellig ist (x < 10)
     if secondsTimePlayed < 10:
         secondsTimePlayed = "0" + str(secondsTimePlayed)
     if minuteTimePlayed < 10:
         minutesTimePlayed = "0" + str(minuteTimePlayed)
-    if gameTime < 0:
-        showEndScreen = True
 
 def downCount():
-    # write a script thats counts down indepentantly from the main thread
     global secondsTimePlayed
     global minutesTimePlayed
     global gameTime
     global lastCount
     global showEndScreen
     
+    # Zöhle die Zeit ohne time.sleep(x), da time.sleep() den Thread blockt
     diff = current_second_time() - lastCount
     if (diff > 0):
         gameTime = gameTime - 1
         lastCount = current_second_time()
         
+    # Forme in Minuten : Sekunden um
     minuteTimePlayed = int(gameTime / 60)
     secondsTimePlayed = int(gameTime % 60)
+    # Setze "0" davor, wenn die Zahl einstellig ist (x < 10)
     if secondsTimePlayed < 10:
         secondsTimePlayed = "0" + str(secondsTimePlayed)
     if minuteTimePlayed < 10:
         minutesTimePlayed = "0" + str(minuteTimePlayed)
-    if gameTime < 0:
+    # Wenn Zeit abgelaufen, dann setze alles zurück und zeige Endscreen
+    if gameTime < 1:
+        resetGame()
         showEndScreen = True
 
 
@@ -183,30 +183,39 @@ def mainGame():
     global startup
     global pauseStart
     running = True
-    startup = True
-    resetGame()
+
+    resetGame() # Setze alle Variablen zurück -> lädt Einstellungen
     while running:
-        canvas.fill((0, 0, 0))
+        canvas.fill((0, 0, 0)) # Setzt Hintergrund schwarz
         if showMainMenu:
-            mainMenu_startButton.draw(canvas)
+            ###############
+            # HAUPTMENÜ
+            ###############
+            # Zeige Start und EXit Button
+            mainMenu_startButton.draw(canvas) 
             mainMenu_exitButton.draw(canvas)
+            # Zeige Text
             settingsMessage = font(32).render("Drücke Enter um die Einstellungen !!! IN DER KONSOLE !!! zu ändern!", True, (255, 255, 255))
             canvas.blit(settingsMessage, (xCenter - settingsMessage.get_width() // 2,  yCenter - 250 - settingsMessage.get_height() // 6))
+            # Button Logik
             if mainMenu_startButton.isClicked():
                 showMainMenu = False
             if mainMenu_exitButton.isClicked():
                 quit()
+            
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     quit()
                 if event.type == pygame.KEYUP:
                     if event.key == pygame.K_RETURN:
+                        # Einstellungen ändern
                         subprocess.call("settingsmaker.py",shell=True)
-                        resetGame()
-                        
+                        resetGame()      
         elif showEndScreen:
+            # Zeige Text
             creditsMessage = font(32).render("Game made by: Joel Wiedemeier, Justus Seeck, Jonas Klickermann, Leif Rindermann!", True, (255, 255, 255))
             canvas.blit(creditsMessage, (xCenter - creditsMessage.get_width() // 2,  yCenter *2  - creditsMessage.get_height() - 15))
+            # Zeige die Buttons + Logik
             mainMenu_startButton.draw(canvas)
             mainMenu_exitButton.draw(canvas)
             if mainMenu_startButton.isClicked():
@@ -215,6 +224,7 @@ def mainGame():
             if mainMenu_exitButton.isClicked():
                 quit()
             
+            # Gewinn Validierung
             if player1.score > player2.score:
                 winMessage = font(32).render("Spieler 1 hat gewonnen!", True, (255, 0, 0))
             if player2.score > player1.score:
@@ -226,16 +236,17 @@ def mainGame():
                 if event.type == pygame.QUIT:
                     quit()
         elif showPauseMenu:
+            # Zeige Puase Text
             pauseTitle = font(64).render("Pause", True, (255, 255, 255))
             canvas.blit(pauseTitle, (xCenter - pauseTitle.get_width() // 2,  yCenter - 250 - pauseTitle.get_height() // 6))
             
             for event in pygame.event.get():
                 if event.type == pygame.KEYUP:
                     if event.key == pygame.K_ESCAPE:
+                        # Schließe Pausemenü, wenn Espace gedrückt wird
                         showPauseMenu = False
                 if event.type == pygame.QUIT:
                     quit()
-        
         else:
             ################################# CHECK PLAYER INPUT #################################
             for event in pygame.event.get():
@@ -243,48 +254,56 @@ def mainGame():
                     quit()
                 if event.type == pygame.KEYUP:
                     if event.key == pygame.K_ESCAPE:
-                        pauseStart = current_second_time()
+                        # Zeige Pausemenü, wenn Escape gedrückt wird
                         showPauseMenu = True
+                # Übergebe Event an Player Class
                 player1.event(event)
                 player2.event(event)
             
             if startup:
                 infoMessage = font(32).render("Beide Spieler müssen Hoch drücken um zu starten!", True, (255, 255, 255))
                 canvas.blit(infoMessage, (xCenter - infoMessage.get_width() // 2,  infoMessage.get_height() // 6))
+                # Wenn beide Spieler Hoch drücken, dann starte das Spiel
                 if player1.UP_KEY == True and player2.UP_KEY == True:
                     startup = False
+                # Zeige einen Haken für die Spieler, wenn sie Hoch drücken
                 if player1.UP_KEY == True:
                     canvas.blit(tick, (10,50))
                 if player2.UP_KEY == True:
                     canvas.blit(tick, (1240,50))
                 lastCount = current_second_time()
             else:
+                # Update Spieler (Position)
                 player1.update()
                 player2.update()
+                # Update Ball (Position + Aktionen)
                 ballEvent = ball.update(player1, player2)
+                # Erhöhe Score
                 if(ballEvent == "goalPlayer1"):
                     player1.score += 1
                 if(ballEvent == "goalPlayer2"):
                     player2.score += 1
+                # Enscheide je nach Einstellung ob hoch oder runtergezählt wird
                 if(infiniteGame == False):
                     downCount()
                 elif(infiniteGame == True):
                     upCount()
+                # Zeit anzeigen
                 time = font(32).render(f"{minutesTimePlayed}:{secondsTimePlayed}", True, (255, 255, 255))
                 canvas.blit(time, (xCenter - time.get_width() // 2,  time.get_height() // 6))
                 
+                # Scores und FPS anzeigen
                 canvas.blit(font(32).render(str(player1.score), True, (255, 255, 255)), (10, 10))
                 canvas.blit(font(32).render(str(player2.score), True, (255, 255, 255)), (1248, 10))
                 canvas.blit(font(16).render(str(int(clock.get_fps())), True, (255, 255, 255)), (0, 704))
-            ############################### DRAW PLAYER #################################
+            # Spieler && Ball darstellen
             player1.draw(canvas)
             player2.draw(canvas)
             ball.draw(canvas)
-            #############################################################################
 
         clock.tick(60)  # Auf 60 Bilder pro Sekunde beschränken
-        window.blit(canvas, (0, 0))
-        pygame.display.update()
+        window.blit(canvas, (0, 0)) # Fenster updaten
+        pygame.display.update() # Pygame updaten
 
 
 ################################# WebSockets #################################
