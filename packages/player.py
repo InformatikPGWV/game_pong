@@ -23,6 +23,9 @@ class Player(pygame.sprite.Sprite):
             self.rect.x = 1280 - self.sideOffset - (self.rect.width/2) # Startposition am Rand Rechts(X-Achse)
         self.rect.y = 400 # Startposition (Y-Achse)
 
+    def centerPlayers(self):
+        self.rect.y = 400
+
     def event(self, event):
         if(self.id == 1): # Spieler 1 benutzt W, S
             if event.type == pygame.KEYDOWN:

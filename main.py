@@ -105,12 +105,18 @@ def resetGame():
     global LimitedGameTimeSeconds
     
     loadSettings()
+    player1.centerPlayers()
+    player2.centerPlayers()
     # Setze Variablen zurück
     player1.score = 0
     player2.score = 0
     ball.centerBall()
     startup = True
-    lastCount = 0
+    mainMenu_startButton.clicked = False
+    mainMenu_exitButton.clicked = False
+    game_exitButton.clicked = False
+    # lastCount = 0
+    lastCount = current_second_time()
     print("Reset complete!")
 
 def quit():
@@ -167,7 +173,6 @@ def downCount():
         minutesTimePlayed = "0" + str(minuteTimePlayed)
     # Wenn Zeit abgelaufen, dann setze alles zurück und zeige Endscreen
     if gameTime < 1:
-        resetGame()
         showEndScreen = True
 
 
@@ -221,6 +226,7 @@ def mainGame():
             if mainMenu_startButton.isClicked():
                 resetGame()
                 showEndScreen = False
+                # showMainMenu = True
             if mainMenu_exitButton.isClicked():
                 quit()
             
