@@ -202,6 +202,9 @@ def mainGame():
             # Zeige Text
             settingsMessage = font(32).render("Drücke Enter um die Einstellungen !!! IN DER KONSOLE !!! zu ändern!", True, (255, 255, 255))
             canvas.blit(settingsMessage, (xCenter - settingsMessage.get_width() // 2,  yCenter - 250 - settingsMessage.get_height() // 6))
+
+            escMessage = font(32).render("Drücke ESC um zu pausieren!", True, (255, 255, 255))
+            canvas.blit(escMessage, (xCenter - escMessage.get_width() // 2,  500 + escMessage.get_height() // 2))
             # Button Logik
             if mainMenu_startButton.isClicked():
                 showMainMenu = False
@@ -251,6 +254,8 @@ def mainGame():
             pauseTitle = font(64).render("Pause", True, (255, 255, 255))
             canvas.blit(pauseTitle, (xCenter - pauseTitle.get_width() // 2,  yCenter - 250 - pauseTitle.get_height() // 6))
             
+            escMessage = font(32).render("Drücke ESC um fortzufahren!", True, (255, 255, 255))
+            canvas.blit(escMessage, (xCenter - escMessage.get_width() // 2,  500 + escMessage.get_height() // 2))
             for event in pygame.event.get():
                 if event.type == pygame.KEYUP:
                     if event.key == pygame.K_ESCAPE:
