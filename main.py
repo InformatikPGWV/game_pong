@@ -83,8 +83,8 @@ def loadSettings():
     
     settings.getData() # Erhalte aktuelle Einstellungen
     infiniteGame = settings.data["infiniteGame"]
-    LimitedGameTimeMinutes = settings.data["LimitedGameTimeMinutes"]
-    LimitedGameTimeSeconds = settings.data["LimitedGameTimeSeconds"]
+    LimitedGameTimeMinutes = int(settings.data["LimitedGameTimeMinutes"])
+    LimitedGameTimeSeconds = int(settings.data["LimitedGameTimeSeconds"])
     
     if not infiniteGame:
         # Setze die Spielzeit, wenn das Game begrenzt ist

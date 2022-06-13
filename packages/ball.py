@@ -74,9 +74,11 @@ class Ball(pygame.sprite.Sprite):
         # Invertiere Y-Richtung bei Kontakt mit oberen oder unteren Rand
         if self.rect.y <= 0:
             # print("Collision with top")
+            pygame.mixer.Sound.play(pygame.mixer.Sound(self.sounds["hit"])) # Spiele Sound ab
             self.velocityY = -self.velocityY
         if self.rect.y >= 705:
             # print("Collision with bottom")
+            pygame.mixer.Sound.play(pygame.mixer.Sound(self.sounds["hit"])) # Spiele Sound ab
             self.velocityY = -self.velocityY
         
         if self.rect.x <= 0:
